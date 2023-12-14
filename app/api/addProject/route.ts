@@ -3,10 +3,6 @@ import Project from "@/models/project";
 import { NextRequest, NextResponse } from "next/server";
 import connectdb from "@/libs/connectMongoDb";
 
-interface IProject {
-  title: string;
-  description: string;
-}
 
 export async function POST(request: NextRequest): Promise<any> {
   try {
