@@ -1,21 +1,39 @@
-import mongoose from "mongoose";
-import Project from "@/models/project";
-import connectdb from "@/libs/connectMongoDb";
-import { NextResponse } from "next/server";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
+import mongoose from 'mongoose';
+import Project from '@/models/project'; 
+import { NextResponse } from 'next/server';
 
+export async function GET(req:Request):Promise<any>{
 
-export async function GET({ params }:Params) : Promise<any>{
+    let id = req.url.split("/api/projects/")[1];
 
-   let {id} = params;
+    console.log(id);
 
     try {
-        await connectdb();
-        const project = await Project.findOne({_id:id});
 
-        return NextResponse.json({success:true,project});
-    } catch (error) {
+        let singleProject = await Project.findOne({userId:id});
         
+        return NextResponse.json({succes:true, singleProject});
+        
+    } catch (error) {
+        console.log(error);
     }
+
+}
+
+export async function DELETE(req:Request){
+    let id = req.url.split("/api/projects/")[1];
+
+    console.log(id);
+
+    try {
+
+        await Project.findOneAndDelete({userId:id});
+        
+        return NextResponse.json({succes:true, message:"deleted successfully"});
+        
+    } catch (error) {
+        console.log(error);
+    }
+ 
 }

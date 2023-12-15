@@ -7,11 +7,11 @@ import connectdb from "@/libs/connectMongoDb";
 export async function POST(request: NextRequest): Promise<any> {
   try {
     
-    const { title, description } = await request.json();
+    const { title, description,userId } = await request.json();
 
     await connectdb();
 
-    const project = await Project.create({title, description });
+    const project = await Project.create({userId, title, description });
 
     return NextResponse.json({sucess:true, project},{status:201});
   
@@ -20,3 +20,5 @@ export async function POST(request: NextRequest): Promise<any> {
     
   }
 }
+
+
