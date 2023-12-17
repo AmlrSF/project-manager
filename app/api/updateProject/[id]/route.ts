@@ -1,25 +1,28 @@
 import connectdb from "@/libs/connectMongoDb";
 import Project from "@/models/project";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 
 
 
-export async function PUT(req: Request): Promise<any> {
-    let { title, description } = await req.json();
-    let id = req.url.split("/api/updateProject/")[1];
 
-    console.log(title, description, id)
+export async function PUT(req:Request, {params}:Params):Promise<any> {
+
+    let {title, description} = await req.json();
+    
+    let { id } = params;
 
     try {
         await connectdb();
-        const doc = await Project.findById(id)
-        doc.title = title;
-        doc.description = description;
-        
-        await doc.save();
-        return NextResponse.json({ sucess: true, message: "updated succesfully" });
+        let doc = await  Project.findOneAndUpdate(
+            {userId:id},
+            {$set:{title, description}},
+            {new:true}
+        )
+
+        return NextResponse.json({success:true, message:"project updated"});
     } catch (error) {
         console.log(error);
-
+        
     }
 }
