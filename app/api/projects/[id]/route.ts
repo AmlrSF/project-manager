@@ -11,7 +11,7 @@ export async function GET(req:Request):Promise<any>{
 
     try {
 
-        let singleProject = await Project.findOne({userId:id});
+        let singleProject = await Project.findOne({_id:id});
         
         return NextResponse.json({succes:true, singleProject});
         
@@ -28,7 +28,7 @@ export async function DELETE(req:Request){
 
     try {
 
-        await Project.findOneAndDelete({userId:id});
+        await Project.findOneAndDelete({_id:id});
         
         return NextResponse.json({succes:true, message:"deleted successfully"});
         

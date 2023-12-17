@@ -7,12 +7,18 @@ import React, { useEffect, useState } from 'react'
 
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+import ModelEditP from '@/components/ModelEditP';
+
 
 
 const page = () => {
-
+    const router = useRouter();
     const [openModel, setOpenModel] = useState(false);
+    const [EditModel, setEditModel] = useState(false);
+
     const [projects, setProjects] = useState<any[]>([]);
+    const [singleProject, setSignleProject] = useState<any | null>(null);
 
     useEffect(() => {
         fetchProjects();
@@ -28,7 +34,7 @@ const page = () => {
             })
 
             const res = await request.json();
-            console.log(res);
+            //console.log(res);
 
             setProjects(res.projects);
 
@@ -38,7 +44,7 @@ const page = () => {
         }
     }
 
-    const deleteProject = async (id:string)=>{
+    const deleteProject = async (id: string) => {
         try {
             const request = await fetch(`http://localhost:3000/api/projects/${id}`, {
                 method: "DELETE",
@@ -47,19 +53,43 @@ const page = () => {
                 }
             })
 
-            
+
             const isConfirmed = window.confirm("are yoi sure blud");
 
-            if(!isConfirmed) return ;
+            if (!isConfirmed) return;
 
             await request.json();
 
             fetchProjects();
-          
+
         } catch (error) {
             console.log(error);
         }
     }
+
+
+    const UpdateProject = async (id: string) => {
+        try {
+            const request = await fetch(`http://localhost:3000/api/projects/${id}`, {
+                method: "GET"
+            });
+
+            const res = await request.json();
+
+            if (res.succes) {
+                setSignleProject(res.singleProject);
+
+                setEditModel(true);
+                console.log(res.singleProject);
+
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <div className='container flex flex-col gap-5'>
@@ -82,13 +112,15 @@ const page = () => {
                                 <p className='text-slate-600 font-normal mt-[-7px]'>{item.description}</p>
                             </div>
                             <div className='flex flex-col gap-3 '>
-                                <MdDelete className="text-red-600 text-xl cursor-pointer" onClick={()=>deleteProject(item.userId)}/>
-                                <FaEdit className="text-green-600 text-xl cursor-pointer"/>
+                                <MdDelete className="text-red-600 text-xl cursor-pointer" onClick={() => deleteProject(item._id)} />
+                                <FaEdit className="text-green-600 text-xl cursor-pointer " onClick={() => UpdateProject(item._id)} />
                             </div>
                         </div>
                     )
                 })}
             </div>
+
+            <ModelEditP EditModel={EditModel} setEditModel={setEditModel} fetchProjects={fetchProjects} singleProject={singleProject} />
         </div>
     )
 }

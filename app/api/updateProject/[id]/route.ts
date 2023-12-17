@@ -15,7 +15,7 @@ export async function PUT(req:Request, {params}:Params):Promise<any> {
     try {
         await connectdb();
         let doc = await  Project.findOneAndUpdate(
-            {userId:id},
+            {_id:id},
             {$set:{title, description}},
             {new:true}
         )

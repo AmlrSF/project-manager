@@ -4,7 +4,7 @@ import { UserButton, auth } from "@clerk/nextjs";
  
 
 const Navbar = () => {
-  const {userId} = auth();
+  const { userId } = auth();
 
   return (
     <header className=' w-full mb-5 bg-slate-900 py-4'>
